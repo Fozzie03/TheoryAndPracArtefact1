@@ -45,144 +45,92 @@ char peek(struct memory *stack){
 int pdaStateZero(char input[]){
     //INITIALIZE THE PDA
     //Keep track of position in the string
+
+
+    
+    printf("\nState Zero");
+
     int pos = 0;
     //Initialize Stack
     struct memory stack;
     stackInit(&stack);
 
-    
-    printf("\nState Zero");
-
-    //First Passthrough (If i = j)
-    if (pdaStateOne(input, stack, pos) == 1) return 1;
-
-    //Second Passthrough (If j = k)
-    return pdaStateFour(input, stack, pos);
+    return pdaStateOne(input, stack, pos);
 }
 
 int pdaStateOne(char input[], struct memory stack, int pos){
     printf("\nState One");
-    
+
     if(pos < 265 && input[pos] != NULL){
-
         if(input[pos] == 'a') {
-
             push(&stack, 'x');
-
             return pdaStateOne(input, stack, ++pos);
-
         } 
         
         else if (input[pos] == 'b'){
+            pop(&stack);
+            if (pdaStateTwo(input, stack, ++pos) == 1) return 1;
+            push(&stack, 'x');
 
-            if(peek(&stack) != 'x') return 0;
-
-            else {
-                pop(&stack);
-                return pdaStateTwo(input, stack, ++pos);
-            }
-
-        }
-
-        else {
-            return -1;
-        }
+            return pdaStateFour(input, stack, pos);
+        } 
+        
+        else return -1;
 
     } else return 0;
 }
 
 int pdaStateTwo(char input[], struct memory stack, int pos){
     printf("\nState Two");
-
     if(pos < 265 && input[pos] != NULL){
         if(input[pos] == 'b'){
-            if(peek(&stack) != 'x') {
-                return 0;
-            } else {
-                pop(&stack);
-                return pdaStateTwo(input, stack, ++pos);
-            }
-        } else if (input[pos] == 'c') {
+            pop(&stack);
+            return pdaStateTwo(input, stack, ++pos);
+        } else if (input[pos] == 'c'){
             return pdaStateThree(input, stack, ++pos);
-        } else {
-            return -1;
-        }
-
-
+        } else return -1;
+        
     } else return 0;
 }
 
-//Because these are PDAs, the Automaton has to read the entire string, so even if the As and Bs are the same and we would already know by now
-//It is important to read the rest of the input, because PDAs can't stop whenever it wants, it has to get to the final state.
 int pdaStateThree(char input[], struct memory stack, int pos){
     printf("\nState Three");
-
-    if(pos < 265 && input[pos] != NULL){
+    if(pos < 265 && input[pos] != NULL){    
         if(input[pos] == 'c'){
             return pdaStateThree(input, stack, ++pos);
-        } else {
-            return -1;
-        }
+        } else return -1;
 
-    } else if(peek(&stack) == '$'){
-        return pdaStateSeven();
-    }
+    } else return pdaStateSix(input, stack, pos);
 }
 
 int pdaStateFour(char input[], struct memory stack, int pos){
     printf("\nState Four");
-
     if(pos < 265 && input[pos] != NULL){
-        if(input[pos] == 'a'){
+        if(input[pos] == 'b'){
             return pdaStateFour(input, stack, ++pos);
-        } else if (input[pos] == 'b') {
-            push(&stack, 'x');
+        } else if(input[pos] == 'c'){
+            if(peek(&stack) != 'x') return 0;
+            pop(&stack);
             return pdaStateFive(input, stack, ++pos);
-        } else {
-            return -1;
-        }
-    } return 0;
+        } else return -1;
+
+    } else return 0;
 }
 
 int pdaStateFive(char input[], struct memory stack, int pos){
     printf("\nState Five");
-
     if(pos < 265 && input[pos] != NULL){
-        if(input[pos] == 'b'){
-            push(&stack, 'x');
+        if(input[pos] == 'c'){
+            if(peek(&stack) != 'x') return 0;
+            pop(&stack);
             return pdaStateFive(input, stack, ++pos);
-        } else if (input[pos] == 'c') {
-            if(peek(&stack) != 'x'){
-                return 0;
-            } else {
-                pop(&stack);
-                return pdaStateSix(input, stack, ++pos);
-            }
-        } else {
-            return -1;
-        }
-    } return 0;
+        } else return -1;
+    } else return pdaStateSix(input, stack, pos);
+
 }
 
 int pdaStateSix(char input[], struct memory stack, int pos){
     printf("\nState Six");
-
-    if(pos < 265 && input[pos] != NULL){
-        if(input[pos] == 'c'){
-            if(peek(&stack) != 'x'){
-                return 0;
-            } else {
-                pop(&stack);
-                return pdaStateSix(input, stack, ++pos);
-            }
-        } else return -1;
-    } else if(peek(&stack) == '$'){
-        return pdaStateSeven();
-    }
-}
-
-int pdaStateSeven(){
-    printf("\nState Seven");
-
-    return 1;
+    if(peek(&stack) != '$') return 0;
+    else return 1;
 }

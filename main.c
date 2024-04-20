@@ -32,10 +32,8 @@ int main(int argc, char const *argv[])
     } else if (result == 1){
         printf("\nAcceptable Grammar");
     } else {
-        printf("\nError, Possible Character in Grammar that doesn't exist in this language");
+        printf("\nERROR INVALID CHARACTER FORMAT\n\n");
     }
     
-    
-
     return 0;
 }
