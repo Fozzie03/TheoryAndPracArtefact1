@@ -3,6 +3,9 @@ struct memory{
     char stack[256];
 };
 
+// STACK FUNCTIONS
+
+//Initialize stack
 int stackInit(struct memory *stack){
     printf("\nInitializing Stack");
     stack -> size = 1;
@@ -11,12 +14,15 @@ int stackInit(struct memory *stack){
     return 0;
 }
 
+//Push Value to Stack
 int push(struct memory *stack, char value){
     printf("\n  Pushing %c", value);
     stack->stack[stack->size++] = value;
 
     return 0;
 }
+
+//Pop Value off the stack
 char pop(struct memory *stack){
     stack -> size--;
     char value = stack->stack[stack->size];
@@ -26,11 +32,15 @@ char pop(struct memory *stack){
     return value;
 }
 
+//Read stack
 char peek(struct memory *stack){
     
     printf("\n  Peeking %c", stack -> stack[stack -> size-1]);
     return stack -> stack[stack -> size-1];
 }
+
+// STACK FUNCTIONS END
+
 
 int pdaStateZero(char input[]){
     //INITIALIZE THE PDA

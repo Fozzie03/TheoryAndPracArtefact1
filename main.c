@@ -22,7 +22,7 @@ int main(int argc, char const *argv[])
     scanf("%s", &input);
     int result = 0;
     if(decision == '1') {
-        result = dfaStateOne(input, 0);
+        result = dfaQ0(input, 0);
     } else if (decision == '2'){
         result = pdaStateZero(input);
     }
